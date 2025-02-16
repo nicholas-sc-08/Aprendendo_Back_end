@@ -16,7 +16,7 @@ app.get(`/casas/:numero`, (req, res) => {
 
     if(casa_a_encontrar){
 
-        res.status(200).json({casa: casa_a_encontrar});
+        res.status(200).json(casa_a_encontrar);
 
     } else {
 
@@ -34,9 +34,34 @@ app.post(`/casas`, (req, res) => {
     };
 
     casas.push(casa_a_cadastrar);
-    res.status(200).json({
+    res.status(201).json({
         casa_cadastrada: casa_a_cadastrar,
         message: `Casa cadastrada com sucesso!`});
+});
+
+app.put(`/casas/:numero`, (req, res) => {
+
+    const { numero } = req.params;
+    const index_casa = casas.findIndex(casa => casa.numero === parseInt(numero));
+
+    if(index_casa != -1){
+
+    const casa_atualizada = {
+
+        numero: casas[index_casa].numero,
+        cep: Date.now(),
+        tipo: "apartamento"
+    };
+
+    casas.splice(index_casa,1, casa_atualizada);
+    res.status(200).json({
+        casa_atualizada: casa_atualizada,
+        message: `Atualizado com sucesso`});
+
+    } else {
+
+        res.status(404).json({message: `Erro ao encontrar a casa`});
+    };
 });
 
 app.delete(`/casas/:numero`, (req, res) => {
